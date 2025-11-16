@@ -1,0 +1,1794 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ŞagirdLab: İnteraktiv Təhsil Platforması</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        /* ================================================ */
+        /* I. FONT VƏ ƏSAS DƏYİŞƏNLƏR (Variables) */
+        /* ================================================ */
+        :root {
+            --primary-color: #FFC107; /* Sarı - Əsas vurğu rəngi */
+            --secondary-color: #2196F3; /* Mavi - İkinci dərəcəli vurğu rəngi */
+            --white-color: #f0f0f0; 
+            --text-color: #c0c0c0; /* Açık boz */
+            --background-dark: #2c3e50; /* Tünd boz-mavi (sections) */
+            --background-light: #243447; /* Daha tünd (header, footer) */
+            --error-color: #E74C3C; /* Qırmızı - Xəta */
+            --success-color: #2ECC71; /* Yaşıl - Uğur */
+            --font-family-main: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            --border-radius: 12px;
+            --box-shadow-light: 0 8px 15px rgba(0, 0, 0, 0.2);
+            --box-shadow-dark: 0 12px 25px rgba(0, 0, 0, 0.4);
+            /* Video Platforması Rəngləri (Sayt rənglərinə uyğun) */
+            --video-bg-color: var(--background-dark); 
+            --video-card-color: #34495e; 
+            --video-accent: var(--primary-color);
+        }
+
+        /* ================================================ */
+        /* II. ÜMUMİ VƏ ƏSAS DİZAYN (Reset/Body/Container) */
+        /* ================================================ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        html {
+            scroll-behavior: smooth;
+        }
+        body {
+            font-family: var(--font-family-main);
+            background-color: var(--background-light);
+            color: var(--text-color);
+            line-height: 1.6;
+            overflow-x: hidden; 
+        }
+        a {
+            text-decoration: none;
+            color: var(--secondary-color);
+            transition: color 0.3s;
+        }
+        a:hover {
+            color: var(--primary-color);
+        }
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        h1, h2, h3, h4 {
+            color: var(--white-color);
+        }
+
+        /* ================================================ */
+        /* III. HEADER VƏ NAVİQASİYA (BLUR ƏLAVƏ OLUNDU) */
+        /* ================================================ */
+        .header {
+            background-color: rgba(31, 36, 41, 0.85); /* Yüngül şəffaf fon */
+            backdrop-filter: blur(10px); /* Əsas blur effekti */
+            -webkit-backdrop-filter: blur(10px); /* Safari dəstəyi */
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: var(--box-shadow-dark);
+        }
+        .header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .nav {
+            display: flex;
+            gap: 30px;
+        }
+        .nav-link {
+            color: var(--white-color);
+            font-size: 1.1rem;
+            font-weight: 500;
+            position: relative;
+            padding: 5px 0;
+            transition: color 0.3s;
+        }
+        .nav-link:hover, .nav-link.active {
+            color: var(--primary-color);
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--primary-color);
+            transform: scaleX(0);
+            transition: transform 0.3s;
+        }
+        .nav-link:hover::after, .nav-link.active::after {
+            transform: scaleX(1);
+        }
+        .menu-toggle {
+            font-size: 1.8rem;
+            color: var(--primary-color);
+            cursor: pointer;
+            display: none; 
+        }
+
+        /* ================================================ */
+        /* IV. ƏSAS VƏ BÖLMƏ DİZAYNI (Sections) */
+        /* ================================================ */
+        .section {
+            padding: 100px 0;
+            min-height: 90vh;
+            display: flex;
+            align-items: center;
+            opacity: 0;
+            animation: fadeIn 0.8s ease-out forwards;
+        }
+        .grey-bg {
+            background-color: var(--background-dark);
+        }
+        .section-title {
+            font-size: 3.5rem;
+            color: var(--white-color);
+            text-align: center;
+            margin-bottom: 5rem;
+            font-weight: 700;
+            border-bottom: 4px solid var(--secondary-color);
+            padding-bottom: 15px;
+            display: inline-block;
+            margin-left: auto;
+            margin-right: auto;
+            width: fit-content;
+        }
+
+        /* ================================================ */
+        /* V. HERO SECTION (Əsas Səhifə) */
+        /* ================================================ */
+        .hero-section .container {
+            display: flex;
+            align-items: center;
+            gap: 80px;
+        }
+        .hero-content {
+            flex: 1;
+            padding-right: 50px;
+            animation: slideDown 1s ease-out forwards;
+        }
+        .title {
+            font-size: 4.5rem;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 15px;
+            color: var(--white-color);
+        }
+        .subtitle {
+            font-size: 1.8rem;
+            font-weight: 300;
+            color: var(--text-color);
+            margin-bottom: 25px;
+        }
+        .description {
+            font-size: 1.1rem;
+            color: #b0b0b0;
+            margin-bottom: 30px;
+        }
+        .hero-image {
+            flex: 1;
+            text-align: center;
+            animation: fadeInRight 1s ease-out forwards;
+        }
+        .lab-img {
+            max-width: 100%;
+            height: auto;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow-dark);
+            transition: transform 0.4s;
+        }
+        .lab-img:hover {
+            transform: scale(1.03);
+        }
+
+        /* ================================================ */
+        /* VI. DÜYMƏLƏR (BUTTONS) */
+        /* ================================================ */
+        .btn {
+            display: inline-block;
+            padding: 16px 35px;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+        }
+        .primary-btn {
+            background-color: var(--primary-color);
+            color: #1f2429;
+        }
+        .primary-btn:hover {
+            background-color: #e6b000;
+            box-shadow: 0 0 20px rgba(255, 193, 7, 0.5);
+            transform: translateY(-3px);
+            color: #1f2429;
+        }
+        .secondary-btn {
+            background-color: transparent;
+            color: var(--secondary-color);
+            border: 2px solid var(--secondary-color);
+        }
+        .secondary-btn:hover {
+            background-color: var(--secondary-color);
+            color: var(--white-color);
+            box-shadow: 0 0 20px rgba(33, 150, 243, 0.5);
+            transform: translateY(-3px);
+        }
+        .upload-btn {
+            background-color: var(--primary-color);
+            color: var(--background-light);
+            padding: 10px 20px;
+            border-radius: 4px;
+            font-size: 1rem;
+        } 
+        .upload-btn:hover {
+            background-color: #e6b000;
+            transform: none;
+            box-shadow: 0 0 10px rgba(255, 193, 7, 0.5);
+        }
+
+        /* ================================================ */
+        /* VII. MİSSİYA/HAQQIMIZDA SECTION */
+        /* ================================================ */
+        .mission-grid {
+            display: flex;
+            gap: 60px;
+            align-items: center;
+        }
+        .mission-text {
+            flex: 2;
+            padding-right: 40px;
+            border-right: 4px solid var(--primary-color);
+        }
+        .mission-text p {
+            margin-bottom: 15px;
+            color: #e0e0e0;
+        }
+        .stats-grid {
+            flex: 1;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            padding-left: 20px;
+        }
+        .stat-box {
+            background-color: #34495e;
+            padding: 25px;
+            border-radius: var(--border-radius);
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+            border-bottom: 4px solid var(--secondary-color);
+        }
+        .stat-box:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--box-shadow-light);
+        }
+        .stat-box h3 {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+            font-weight: 700;
+        }
+        .stat-box p {
+            font-size: 1rem;
+            color: #b0b0b0;
+            text-transform: uppercase;
+        }
+
+        /* ================================================ */
+        /* VIII. XİDMƏTLƏR SECTION */
+        /* ================================================ */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+        }
+        .service-card {
+            background-color: var(--background-light);
+            padding: 40px;
+            border-radius: var(--border-radius);
+            text-align: center;
+            transition: transform 0.4s, box-shadow 0.4s;
+            border-top: 5px solid var(--primary-color);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            cursor: pointer;
+        }
+        .service-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: var(--box-shadow-dark);
+            border-top-color: var(--secondary-color);
+        }
+        .service-icon {
+            font-size: 3.5rem;
+            color: var(--secondary-color);
+            margin-bottom: 20px;
+        }
+        .service-card h3 {
+            font-size: 1.5rem;
+            color: var(--white-color);
+            margin-bottom: 15px;
+        }
+        .service-card p {
+            color: #b0b0b0;
+            margin-bottom: 20px;
+        }
+        .project-link {
+            font-weight: 600;
+            color: var(--primary-color);
+            display: inline-block;
+        }
+        
+        /* ================================================ */
+        /* IX. KİTAB KATALOQU SECTION */
+        /* ================================================ */
+        .catalogue-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            perspective: 1000px; /* 3D effekti üçün */
+        }
+        .book-card {
+            background-color: var(--background-light);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--box-shadow-light);
+            transition: transform 0.5s, box-shadow 0.5s, opacity 0.5s;
+            opacity: 0;
+            transform: rotateY(20deg) translateZ(50px);
+            cursor: pointer;
+        }
+        .book-card:hover {
+            transform: scale(1.05) rotateY(0deg) translateZ(0px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+        .book-img {
+            width: 100%;
+            height: 350px;
+            object-fit: cover;
+            filter: grayscale(10%);
+            transition: filter 0.4s;
+        }
+        .book-card:hover .book-img {
+            filter: grayscale(0%);
+        }
+        .book-info {
+            padding: 20px;
+            text-align: center;
+        }
+        .book-info h3 {
+            color: var(--primary-color);
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+        }
+        .book-category {
+            color: #aaa;
+            font-style: italic;
+            margin-bottom: 10px;
+        }
+        .view-more {
+            text-align: center;
+            margin-top: 60px;
+        }
+        
+        /* ================================================ */
+        /* X. VİDEO PLATFORMASI STİLLƏRİ */
+        /* ================================================ */
+        #videos {
+            background-color: var(--background-dark); 
+            min-height: 100vh;
+            padding-top: 50px;
+        }
+        #videos .section-title {
+            color: var(--white-color);
+            border-bottom-color: var(--primary-color); 
+            margin-bottom: 30px;
+        }
+        
+        /* Axtarış və Filterlər */
+        .video-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .search-bar {
+            flex: 1;
+            max-width: 500px;
+            position: relative;
+        }
+        .search-bar input {
+            width: 100%;
+            padding: 10px 40px 10px 15px;
+            border-radius: 5px;
+            border: 1px solid #4a637d;
+            background-color: #34495e; 
+            color: var(--white-color);
+            font-size: 1rem;
+        }
+        .search-bar button {
+            position: absolute;
+            right: 0;
+            top: 0;
+            height: 100%;
+            background-color: #4a637d;
+            color: var(--white-color);
+            border: none;
+            padding: 0 15px;
+            border-left: 1px solid #5a738d;
+            cursor: pointer;
+            border-radius: 0 5px 5px 0;
+            transition: background-color 0.2s;
+        }
+        .search-bar button:hover {
+            background-color: var(--secondary-color);
+        }
+        
+        .filter-buttons button {
+            background-color: #34495e;
+            color: var(--white-color);
+            border: none;
+            padding: 8px 15px;
+            margin-right: 10px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: background-color 0.2s, color 0.2s;
+            font-size: 0.9rem;
+        }
+        .filter-buttons button:hover, .filter-buttons button.active {
+            background-color: var(--secondary-color); 
+            color: var(--white-color);
+        }
+
+        /* Video Kartları */
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        .video-card {
+            background-color: var(--video-card-color); 
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+            border-top: 3px solid transparent;
+        }
+        .video-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.7);
+            border-top-color: var(--primary-color); 
+        }
+        .video-thumbnail {
+            width: 100%;
+            height: 200px; 
+            object-fit: cover;
+        }
+        .video-info {
+            padding: 15px;
+            display: flex;
+            gap: 10px;
+        }
+        .channel-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: var(--primary-color); 
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--background-light);
+            font-weight: 600;
+        }
+        .text-info h4 {
+            font-size: 1.1rem;
+            color: var(--white-color);
+            margin-bottom: 5px;
+            line-height: 1.3;
+        }
+        .text-info p {
+            font-size: 0.9rem;
+            color: #aaa;
+            line-height: 1.2;
+        }
+
+        /* ================================================ */
+        /* XI. MODALLAR (Pəncərələr) DİZAYNI */
+        /* ================================================ */
+        .modal {
+            display: none; 
+            position: fixed; 
+            z-index: 2000; 
+            left: 0;
+            top: 0;
+            width: 100%; 
+            height: 100%; 
+            overflow: auto; 
+            background-color: rgba(0,0,0,0.85); 
+            animation: fadeIn 0.3s ease-out;
+        }
+        .modal-content {
+            background-color: #1f2429;
+            margin: 5vh auto; 
+            padding: 35px;
+            border: 1px solid var(--secondary-color);
+            width: 80%;
+            max-width: 900px;
+            border-radius: var(--border-radius);
+            position: relative;
+            box-shadow: var(--box-shadow-dark);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        .close-btn {
+            color: #aaa;
+            float: right;
+            font-size: 3rem;
+            font-weight: bold;
+            position: absolute;
+            top: 10px;
+            right: 25px;
+            transition: color 0.3s;
+        }
+        .close-btn:hover, .close-btn:focus {
+            color: var(--primary-color);
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .modal-title {
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2rem;
+            border-bottom: 2px solid var(--secondary-color);
+            padding-bottom: 10px;
+        }
+        .book-list-container {
+            max-height: 400px;
+            overflow-y: auto;
+            padding-right: 15px; /* Scrollbar üçün yer */
+        }
+        .book-item {
+            margin-bottom: 15px;
+        }
+        .quiz-structure {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+        .quiz-category h4 {
+            color: var(--secondary-color);
+            margin-bottom: 15px;
+            border-bottom: 1px dashed #3e5066;
+            padding-bottom: 5px;
+        }
+        .quiz-link {
+            display: block;
+            background-color: #34495e;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            color: var(--white-color);
+            transition: background-color 0.3s, transform 0.2s;
+        }
+        .quiz-link:hover {
+            background-color: #4a637d;
+            transform: translateX(5px);
+        }
+        .quiz-link i {
+            margin-right: 10px;
+            color: var(--primary-color);
+        }
+        .quiz-link.disabled {
+            background-color: #303e4e;
+            color: #777;
+            cursor: not-allowed;
+        }
+
+        /* Yeni: Wordle Game Stilləri */
+        .wordle-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .wordle-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 8px;
+            width: 100%;
+            max-width: 300px; 
+            margin: 0 auto 20px;
+        }
+        .wordle-cell {
+            width: 100%;
+            height: 50px;
+            border: 2px solid #555;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--white-color);
+            background-color: #303e4e;
+            transition: background-color 0.5s, transform 0.2s;
+            text-transform: uppercase;
+        }
+        .wordle-cell.correct {
+            background-color: var(--success-color); /* Yaşıl */
+            border-color: var(--success-color);
+            transform: scale(1.05);
+        }
+        .wordle-cell.present {
+            background-color: var(--primary-color); /* Sarı */
+            border-color: var(--primary-color);
+        }
+        .wordle-cell.absent {
+            background-color: #555; /* Boz */
+            border-color: #555;
+        }
+        .wordle-cell.shake {
+            animation: shake 0.5s;
+        }
+        .wordle-cell.filled {
+            border-color: var(--white-color); /* Yazılan xanaların çərçivəsini dəyişir */
+        }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-10px); }
+            40%, 80% { transform: translateX(10px); }
+        }
+        
+        /* Yeni: Wordle üçün Gizli Input (Mobil klaviaturanı açmaq üçün vacibdir) */
+        .wordle-container input#guess-input {
+            opacity: 0;
+            position: absolute;
+            z-index: -1;
+            /* Mobil klaviatura görünməsi üçün əlavə dəyərlər */
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: 0;
+            border: none;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+        }
+
+
+        /* ================================================ */
+        /* XII. ƏLAQƏ SECTION */
+        /* ================================================ */
+        .contact-content p {
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto 40px;
+            color: #e0e0e0;
+        }
+        .contact-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            background-color: var(--background-dark);
+            padding: 50px;
+            border-radius: var(--border-radius);
+            max-width: 800px;
+            margin: 0 auto;
+            box-shadow: var(--box-shadow-dark);
+        }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+        .form-full-width {
+            grid-column: 1 / -1;
+        }
+        .contact-form label {
+            color: var(--white-color);
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        .contact-form input, .contact-form textarea {
+            padding: 12px;
+            border: 1px solid #4a637d;
+            border-radius: 8px;
+            background-color: #2c3e50;
+            color: var(--white-color);
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        .contact-form input:focus, .contact-form textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 5px rgba(255, 193, 7, 0.5);
+        }
+        .submit-btn {
+            grid-column: 1 / -1;
+            width: 50%;
+            margin: 20px auto 0;
+            padding: 15px 35px;
+        }
+        .form-status {
+            text-align: center;
+            margin-top: 20px;
+            font-weight: 600;
+        }
+
+        /* ================================================ */
+        /* XIII. KEYFRAMES & RESPONSİVLİK */
+        /* ================================================ */
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideDown { from { transform: translateY(-70px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        @keyframes fadeInRight { from { opacity: 0; transform: translateX(-70px); } to { transform: translateX(0); opacity: 1; } }
+        @keyframes fadeInLeft { from { opacity: 0; transform: translateX(70px); } to { transform: translateX(0); opacity: 1; } }
+
+        /* --- MEDIA QUERIES (RESPONSİVLİK) --- */
+
+        /* 992px və aşağısı (Tablet/Kiçik Desktop) */
+        @media (max-width: 992px) {
+            .hero-section .container {
+                gap: 40px;
+            }
+            .hero-content {
+                padding-right: 0;
+            }
+            .title {
+                font-size: 3.5rem;
+            }
+            .subtitle {
+                font-size: 1.5rem;
+            }
+            .mission-grid {
+                flex-direction: column;
+                gap: 40px;
+            }
+            .mission-text {
+                padding-right: 0;
+                border-right: none;
+                border-bottom: 4px solid var(--primary-color);
+                padding-bottom: 30px;
+            }
+            .stats-grid {
+                padding-left: 0;
+            }
+            
+            /* Naviqasiya Menyu (Mobil) */
+            .nav {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 70px; 
+                left: 0;
+                width: 100%;
+                background-color: var(--background-light);
+                box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+                padding: 20px 0;
+                text-align: center;
+                gap: 10px;
+                border-top: 1px solid #4a637d;
+            }
+            .nav.open {
+                display: flex;
+            }
+            .nav-link {
+                padding: 10px 0;
+                font-size: 1.2rem;
+            }
+            .menu-toggle {
+                font-size: 1.8rem;
+                color: var(--primary-color);
+                cursor: pointer;
+                display: block; 
+            }
+            
+            /* Video Controls Mobil Üçün */
+            .video-controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .search-bar {
+                max-width: 100%;
+            }
+            .filter-buttons {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 10px;
+                justify-content: center;
+            }
+            .filter-buttons button {
+                margin-right: 0;
+            }
+            .upload-btn {
+                width: 100%;
+            }
+        }
+
+        /* 768px və aşağısı (Kiçik Tablet) */
+        @media (max-width: 768px) {
+            .section {
+                padding: 80px 0;
+                min-height: auto;
+            }
+            .section-title {
+                font-size: 3rem;
+                margin-bottom: 4rem;
+            }
+            .hero-section .container {
+                flex-direction: column;
+                text-align: center;
+            }
+            .hero-content {
+                order: 2;
+                padding-right: 0;
+            }
+            .hero-image {
+                order: 1;
+                margin-bottom: 30px;
+            }
+            .lab-img {
+                max-width: 80%;
+            }
+            .title {
+                font-size: 4rem;
+            }
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            .contact-form {
+                grid-template-columns: 1fr;
+                padding: 40px;
+            }
+            .submit-btn {
+                width: 80%;
+            }
+        }
+
+        /* 576px və aşağısı (Mobil Telefon) */
+        @media (max-width: 576px) {
+            .logo {
+                font-size: 1.8rem;
+            }
+            .title {
+                font-size: 2.8rem;
+            }
+            .subtitle {
+                font-size: 1.3rem;
+            }
+            .description {
+                font-size: 1rem;
+            }
+            .lab-img {
+                max-width: 100%;
+            }
+            .btn {
+                padding: 12px 25px;
+                font-size: 1rem;
+            }
+            .services-grid {
+                gap: 30px;
+            }
+            .contact-form {
+                padding: 20px;
+            }
+            .video-grid {
+                grid-template-columns: 1fr; 
+            }
+            .filter-buttons button {
+                padding: 6px 10px;
+            }
+        }
+    </style>
+</head>
+<body> 
+
+    <div id="bookModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" data-modal="book">&times;</span>
+            <h2 id="modal-title-book" class="modal-title">Kitab Kataloqu Detalları</h2>
+            <div id="book-list-container" class="book-list-container">
+                </div>
+            <a href="#" class="btn primary-btn" style="margin: 30px auto 0;">Tam Kataloqa Bax</a>
+        </div>
+    </div>
+
+    <div id="quizModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" data-modal="quiz">&times;</span>
+            <h2 class="modal-title">🧠 İnteraktiv Quiz Mərkəzi: Bilik Resursları</h2>
+            <p style="color: #ccc; margin-bottom: 25px; text-align: center;">Aşağıdakı bölmələrdə fənlər üzrə ən son quizlər və sınaq imtahanları yerləşdirilib.</p>
+            
+            <div class="quiz-structure">
+                <div class="quiz-category" style="grid-column: 1 / -1;">
+                    <h4><i class="fas fa-scroll"></i> Əsas Sınaq İmtahanları (3 Böyük Sınaq)</h4>
+                    
+                    <a href="https://wayground.com/join?gc=01409930" target="_blank" class="quiz-link">
+                        <i class="fas fa-flag"></i> Azərbaycan Tarixi Sınağı (KOD: 01409930)
+                    </a>
+                    
+                    <a href="https://wayground.com/join?gc=41124746" target="_blank" class="quiz-link">
+                        <i class="fas fa-globe-americas"></i> Ümumi Tarix Sınağı (KOD: 41124746)
+                    </a>
+                    
+                    <a href="https://wayground.com/join?gc=28803978" target="_blank" class="quiz-link">
+                        <i class="fas fa-map-marked-alt"></i> Coğrafiya Sınağı (KOD: 28803978)
+                    </a>
+
+                    <a href="#" class="quiz-link disabled"><i class="fas fa-lock"></i> Digər Fənlər (Tezliklə!)</a>
+                </div>
+            </div>
+            
+            <p style="text-align: center; margin-top: 30px; font-style: italic; color: #a0a0a0;">* Linklər simulyasiya üçündür. Premium məzmun üçün qeydiyyat tələb olunur.</p>
+        </div>
+    </div>
+    
+    <div id="codeWordleModal" class="modal">
+        <div class="modal-content" style="max-width: 500px;">
+            <span class="close-btn" data-modal="codeWordle">&times;</span>
+            <h2 class="modal-title">💻 Code-Wordle: Sözü Tap!</h2>
+            <div id="wordle-controls" style="text-align: center; margin-bottom: 20px;">
+                <label for="language-select" style="color: var(--white-color); margin-right: 15px;">Dil:</label>
+                <select id="language-select" onchange="startGame()" style="padding: 5px 10px; border-radius: 5px; background-color: #34495e; color: var(--white-color); border: none;">
+                    <option value="az">Azərbaycan Dili</option>
+                    <option value="en">English</option>
+                </select>
+                <button onclick="startGame()" class="btn secondary-btn" style="padding: 8px 15px; margin-left: 15px; border-radius: 8px; font-size: 1rem;">Yenidən Başla</button>
+                <p id="attempts-info" style="color: var(--text-color); margin-top: 10px; font-size: 1.1rem;">Cəhdlər: <span id="current-attempt">0</span> / 6</p>
+            </div>
+            <div id="wordle-container" class="wordle-container">
+                <div id="wordle-grid" class="wordle-grid">
+                    </div>
+                <input type="text" id="guess-input" maxlength="5" placeholder="5 hərflik söz daxil edin" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+            </div>
+            
+            <button onclick="submitGuess()" id="submit-button" class="btn primary-btn" style="width: 100%; margin-top: 15px; padding: 12px; font-size: 1.1rem;">Yoxla</button>
+            <p id="game-message" style="text-align: center; margin-top: 20px; font-weight: 600; color: var(--primary-color); font-size: 1.2rem;"></p>
+        </div>
+    </div>
+
+    <header class="header">
+        <div class="container">
+            <a href="#home" class="logo">ŞagirdLab</a> 
+            <nav class="nav">
+                <a href="#home" class="nav-link active" data-section="home">Əsas Səhifə</a>
+                <a href="#videos" class="nav-link" data-section="videos">Videolar</a> 
+                <a href="#services" class="nav-link" data-section="services">Xidmətlər</a>
+                <a href="#catalogue" class="nav-link" data-section="catalogue">Kitablar</a>
+                <a href="#contact" class="nav-link" data-section="contact">Əlaqə</a>
+            </nav>
+            <div class="menu-toggle">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </header>
+
+    <section id="home" class="hero-section section">
+        <div class="container">
+            <div class="hero-content">
+                <p class="greeting" style="font-size: 1.4rem; color: #999; margin-bottom: 10px;">Xoş gəldiniz, Gələcəyin Lideri!</p>
+                <h1 class="title">ŞagirdLab: <span style="color: var(--secondary-color);">Öyrən, Oyna, Qazan</span></h1> 
+                <h2 class="subtitle">Abituriyent və Şagirdlər üçün İnteraktiv Təhsil Platforması</h2>
+                <p class="description">Dərsləri unudulmaz oyunlara çeviririk. Burada sınaq imtahanları, interaktiv quizlər və motivasiyaedici resurslar sizi gözləyir!</p>
+                <div style="margin-top: 40px; display: flex; gap: 20px; flex-wrap: wrap; justify-content: center;">
+                    <a href="#videos" class="btn primary-btn"><i class="fas fa-video"></i> Video Dərslər</a>
+                    <a href="#services" class="btn secondary-btn"><i class="fas fa-graduation-cap"></i> Öyrənməyə Başla</a>
+                </div>
+            </div>
+            <div class="hero-image">
+                <img src="https://i.pinimg.com/1200x/43/28/1d/43281d89dd9fa938d4a7d3edd647e5e1.jpg" alt="ŞagirdLab Təhsil Konsepti" class="lab-img"> 
+            </div>
+        </div>
+    </section>
+
+    <section id="mission" class="about-section section grey-bg">
+        <div class="container">
+            <h2 class="section-title">🚀 Missiyamız və Dəyərlərimiz</h2>
+            <div class="mission-grid">
+                <div class="mission-text">
+                    <p>ŞagirdLab-ın əsas missiyası abituriyent və şagirdlərin sıxıcı dərslərdən uzaq, əyləncəli və interaktiv bir şəkildə öyrənmələrini təmin etməkdir.</p>
+                    <p>Biz inanırıq ki, maraq və oyun vasitəsilə əldə edilən bilik daha qalıcı olur. Hər bir tələbənin potensialını maksimum dərəcədə açmasına kömək etmək üçün ən son texnologiyaları tətbiq edirik.</p>
+                    <p style="color: var(--primary-color); font-weight: 600;">Dəyərlərimiz: İnovasiya, Əyləncə, Əlçatanlıq, Keyfiyyətli Məzmun.</p>
+                    <a href="#services" class="btn primary-btn download-btn"><i class="fas fa-rocket"></i> Niyə Biz?</a>
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-box"> <h3>15K+</h3> <p>Aktiv Şagird</p> </div>
+                    <div class="stat-box"> <h3>200+</h3> <p>İnteraktiv Quiz</p> </div>
+                    <div class="stat-box"> <h3>30+</h3> <p>Hazırlanan Oyun</p> </div>
+                    <div class="stat-box"> <h3>98%</h3> <p>Məmnuniyyət</p> </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="services" class="skills-section section">
+        <div class="container">
+            <h2 class="section-title">💡 Əsas Xidmətlərimiz</h2>
+            <div class="services-grid">
+                
+                <div class="service-card" data-quiz-trigger="general"> 
+                    <i class="fas fa-brain service-icon"></i> 
+                    <h3>İnteraktiv Quizlər</h3> 
+                    <p>Bütün fənlər üzrə əyləncəli və vaxta qarşı quizlər. Biliklərini sına və reytinq cədvəlində yüksəl!</p> 
+                    <a href="#" class="project-link">Quizlərə Başla &raquo;</a>
+                </div>
+                
+                <div class="service-card" data-game-trigger="codeWordle"> 
+                    <i class="fas fa-terminal service-icon"></i> 
+                    <h3>Code-Wordle Oyunu</h3> 
+                    <p>Proqramlaşdırma sözlərini tapın! Azərbaycan və İngilis dillərində beyninizi işə salın.</p> 
+                    <a href="#" class="project-link">Oyuna Başla &raquo;</a>
+                </div>
+
+                <div class="service-card"> 
+                    <i class="fas fa-star service-icon"></i> 
+                    <h3>Motivasiya Kontenti</h3> 
+                    <p>Uğur hekayələri, imtahan strategiyaları və stresslə mübarizə üçün videolar və məqalələr bankı.</p> 
+                    <a href="#" class="project-link">Resurslara Bax &raquo;</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="catalogue" class="portfolio-section section grey-bg">
+        <div class="container">
+            <h2 class="section-title">📚 Bədii Kitab Kataloqu</h2>
+            <div class="catalogue-grid">
+                <div class="book-card" data-genre="fantastika" data-index="1"> 
+                    <img src="https://i.pinimg.com/736x/71/e8/74/71e874ddfc8f5230cddf595f11e28da4.jpg" alt="Fantastika Kitabı" class="book-img"> 
+                    <div class="book-info"> <h3>Fantastika</h3> <p class="book-category">Ağılın sərhədlərini aş!</p> <span class="project-link">Ətraflı Bax <i class="fas fa-eye"></i></span> </div> 
+                </div>
+                <div class="book-card" data-genre="macera" data-index="2"> 
+                    <img src="https://i.pinimg.com/1200x/fd/fb/d6/fdfbd60a7e45f5e0ed569bb34fd9d4e5.jpg" alt="Macəra Kitabı" class="book-img"> 
+                    <div class="book-info"> <h3>Macəra</h3> <p class="book-category">Dünyanı kəşf et!</p> <span class="project-link">Ətraflı Bax <i class="fas fa-eye"></i></span> </div> 
+                </div>
+                <div class="book-card" data-genre="inkisaf" data-index="3"> 
+                    <img src="https://i.pinimg.com/1200x/8c/50/9a/8c509a91adca718140857ef57730f1d9.jpg" alt="Şəxsi İnkişaf Kitabı" class="book-img"> 
+                    <div class="book-info"> <h3>Şəxsi İnkişaf</h3> <p class="book-category">Özünü yenidən yarat!</p> <span class="project-link">Ətraflı Bax <i class="fas fa-eye"></i></span> </div> 
+                </div>
+            </div>
+            <div class="view-more"> <a href="#contact" class="btn primary-btn">Kitab Təklif Et</a> </div>
+        </div>
+    </section>
+
+    <section id="videos" class="section" style="min-height: auto;">
+        <div class="container">
+            <h2 class="section-title">📺 ŞagirdLab TV: Video Dərslər</h2>
+
+            <div class="video-controls">
+                
+                <div class="search-bar">
+                    <input type="text" id="video-search" placeholder="Tarix, Riyaziyyat, Buraxılış, Məntiq axtar...">
+                    <button onclick="filterVideos()"><i class="fas fa-search"></i></button>
+                </div>
+                
+                <div class="filter-buttons" id="filter-buttons">
+                    <button class="active" data-filter="all">Hamısı</button>
+                    <button data-filter="history">Tarix</button>
+                    <button data-filter="math">Riyaziyyat</button>
+                    <button data-filter="language">Dil</button>
+                    <button data-filter="logic">Məntiq</button>
+                </div>
+
+                <a href="#" class="upload-btn" onclick="alert('✅ Təsdiqləndi: Admin hesabı olaraq video yükləmə interfeysinə keçid edildi.')">
+                    <i class="fas fa-upload"></i> Admin Yüklə
+                </a>
+            </div>
+
+            <div id="video-grid" class="video-grid">
+                </div>
+            
+            <p id="no-videos-message" style="text-align: center; color: #888; margin-top: 50px; display: none;">Axtarışınızla uyğun video tapılmadı.</p>
+
+        </div>
+    </section>
+    
+    <section id="contact" class="contact-section section">
+        <div class="container">
+            <h2 class="section-title">📞 Bizimlə Əlaqə</h2>
+            <div class="contact-content">
+                <p>Məzmun təklifləri, əməkdaşlıq üçün və ya texniki dəstək almaq üçün bizə yaza bilərsiniz. Fikirləriniz bizim üçün dəyərlidir!</p>
+                
+                <form id="contact-form" class="contact-form">
+                    
+                    <div class="form-group"> <label for="name">Adınız:</label> <input type="text" id="name" name="name" required placeholder="Adınız və Soyadınız"> </div>
+                    
+                    <div class="form-group"> <label for="email">E-poçtunuz:</label> <input type="email" id="email" name="email" required placeholder="example@sagirdlab.az"> </div>
+
+                    <div class="form-group form-full-width"> <label for="subject">Mövzu:</label> <input type="text" id="subject" name="subject" required placeholder="Mövzunu qeyd edin (Məs: Təklif, Əməkdaşlıq)"> </div>
+                    
+                    <div class="form-group form-full-width"> <label for="message">Mesajınız/Təklifiniz:</label> <textarea id="message" name="message" rows="7" required placeholder="Mesajınızı bura yazın..."></textarea> </div>
+                    
+                    <button type="submit" class="btn primary-btn submit-btn">Mesajı Göndər <i class="fas fa-paper-plane"></i></button>
+                    <p id="form-status" class="form-status form-full-width"></p>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // BÖLÜM 1: MƏLUMAT BAZALARI
+        const booksData = { 
+            fantastika: {
+                title: "Fantastika: Xəyal Gücü Dünyası",
+                list: [
+                    { name: "Harry Potter və Fəlsəfə Daşı", author: "J.K. Rowling", description: "Sehrli dünya macəraları." },
+                    { name: "Hobbit", author: "J.R.R. Tolkien", description: "Bilbo Baggins'in epik səyahəti." },
+                    { name: "Dördüncü Qanad", author: "Rebecca Yarros", description: "Əjdahalar və döyüşçülər haqqında epopeya." },
+                    { name: "Yüz ilin tənhalığı", author: "Gabriel García Márquez", description: "Macondo ailəsinin fantastik hekayəsi." },
+                ],
+                bookIcon: 'fas fa-book-reader'
+            },
+            macera: {
+                title: "Macəra: Kəşfiyyat və Sərgüzəştlər",
+                list: [
+                    { name: "Robinson Kruzo", author: "Daniel Defo", description: "Tənhalıq adasında sağ qalma mübarizəsi." },
+                    { name: "Kapitan Qrantın Uşaqları", author: "Jül Vern", description: "Dünya ətrafında heyecanlı axtarış." },
+                    { name: "Alatoran", author: "Stephenie Meyer", description: "Vampir və insan arasındakı sevgi hekayəsi." },
+                    { name: "Drakula", author: "Bram Stoker", description: "Qorxu və macəranın klassik birləşməsi." },
+                ],
+                bookIcon: 'fas fa-globe-europe'
+            },
+            inkisaf: {
+                title: "Şəxsi İnkişaf: Motivasiya və Uğur",
+                list: [
+                    { name: "Dəqiq ol", author: "Brianna Wiest", description: "Həyatı dəqiqləşdirməyin yolları." },
+                    { name: "Atom Vərdişləri", author: "James Clear", description: "Kiçik dəyişikliklərin böyük gücü." },
+                    { name: "Rich Dad Poor Dad", author: "Robert Kiyosaki", description: "Maliyyə savadının əsasları." },
+                    { name: "Sənətin İncelikləri", author: "Ryan Holiday", description: "Həyatda usta olmağın sirləri." },
+                ],
+                bookIcon: 'fas fa-user-tie'
+            }
+        };
+
+        // YENİLƏNDİ: YOUTUBE ID İLƏ VİDEO DATA BAZASI
+        const videosData = [
+            { id: 1, title: "Azərbaycan Tarixi: Səfəvilər Dövləti 1-ci Hissə", channel: "Tarix Akademiyası", views: "12K", uploadDate: "2 gün əvvəl", category: "history", youtubeId: "S-Vn83M0Y34" },
+            { id: 2, title: "Riyaziyyat Qəbul İmtahanı Testləri İzahı (2024)", channel: "Riyaziyyat Mərkəzi", views: "25K", uploadDate: "1 həftə əvvəl", category: "math", youtubeId: "n_qj4h_n0jY" },
+            { id: 3, title: "Buraxılış İmtahanı: İngilis Dili Qrammatikası", channel: "Language Pro", views: "8K", uploadDate: "1 ay əvvəl", category: "language", youtubeId: "s0b-u10-LqM" },
+            { id: 4, title: "Məntiq Dərsləri: Cədvəl Məsələləri", channel: "Məntiq Ustası", views: "18K", uploadDate: "3 gün əvvəl", category: "logic", youtubeId: "aL3p7h-vGzQ" },
+            { id: 5, title: "Tarix Dərsi: Xətai və Çaldıran Döyüşü", channel: "Tarix Akademiyası", views: "9K", uploadDate: "1 ay əvvəl", category: "history", youtubeId: "g-O9fB8d0X0" },
+            { id: 6, title: "Mürəkkəb Tənliklərin Həlli Yolları", channel: "Riyaziyyat Mərkəzi", views: "15K", uploadDate: "2 həftə əvvəl", category: "math", youtubeId: "i7f-p8W7XyU" },
+        ];
+
+
+        // BÖLÜM 2: MODAL VƏ NAVİQASİYA FUNKSİYALARI
+        const guessInput = document.getElementById('guess-input'); // Wordle inputunu global olaraq elan edirik
+
+        function closeModal(modalId) {
+            document.getElementById(modalId + 'Modal').style.display = 'none';
+             // Wordle modalı bağlananda klaviatura hadisəsini ləğv et
+            if (modalId === 'codeWordle') {
+                guessInput.removeEventListener('input', handleInput);
+                guessInput.removeEventListener('keydown', handleKeyPress); // Desktop klaviatura hadisəsi
+            }
+        }
+
+        function openModal(modalId) {
+            document.getElementById(modalId + 'Modal').style.display = 'block';
+            if (modalId === 'codeWordle') {
+                startGame(); 
+                
+                // Mobil və Desktop Klaviaturası üçün HADİSƏLƏR
+                guessInput.addEventListener('input', handleInput); 
+                guessInput.addEventListener('keydown', handleKeyPress); // Desktop daxilolması üçün
+                
+                // Mobil klaviaturanı açmaq üçün inputa fokuslanma
+                setTimeout(() => {
+                    guessInput.focus();
+                }, 100); 
+            }
+        }
+        
+        function openQuizModal() {
+            openModal('quiz');
+        }
+
+        // KİTAB KATALOQU MODAL MƏNTİQİ
+        function openBookModal(genre) {
+            const data = booksData[genre];
+            if (!data) return;
+
+            document.getElementById('modal-title-book').textContent = data.title;
+            const listContainer = document.getElementById('book-list-container');
+            listContainer.innerHTML = ''; 
+
+            data.list.forEach(book => {
+                const bookItem = document.createElement('div');
+                bookItem.className = 'book-item';
+                bookItem.innerHTML = `
+                    <div style="display: flex; gap: 15px; border-bottom: 1px solid #3e5066; padding: 15px 0; align-items: flex-start;">
+                        <i class="${data.bookIcon}" style="font-size: 2rem; color: var(--secondary-color); flex-shrink: 0; margin-top: 5px;"></i>
+                        <div>
+                            <h4 style="color: var(--white-color); margin-bottom: 5px;">${book.name} <span style="font-size: 0.9rem; color: #aaa;">(${book.author})</span></h4>
+                            <p style="font-size: 0.9rem; color: #b0b0b0;">${book.description}</p>
+                        </div>
+                    </div>
+                `;
+                listContainer.appendChild(bookItem);
+            });
+
+            openModal('book');
+        }
+        
+        // BÖLÜM 3: VİDEO PLATFORMASI MƏNTİQİ (YOUTUBE İNTEQRASİYASI)
+        let activeFilter = 'all'; 
+
+        function renderVideos(filteredVideos) {
+            const grid = document.getElementById('video-grid');
+            const noVideosMessage = document.getElementById('no-videos-message');
+            grid.innerHTML = '';
+
+            if (filteredVideos.length === 0) {
+                noVideosMessage.style.display = 'block';
+                return;
+            }
+            noVideosMessage.style.display = 'none';
+
+            filteredVideos.forEach(video => {
+                const card = document.createElement('div');
+                card.className = 'video-card';
+                // KLİK ƏMƏLİYYATI YENİLƏNDİ: YouTube embed linki açılır
+                card.onclick = () => {
+                    // Embed linkdə YouTube ID-nin doğru olduğundan əmin olun
+                    const embedUrl = `https://youtube.com/shorts/uz0t10Mi-aM?si=GAfvQrh8b-bwUouh`;
+                    // Yeni pəncərədə açmaq
+                    window.open(embedUrl, '_blank', 'width=800,height=500'); 
+                };
+                
+                const avatarText = video.channel.split(' ').map(n => n[0]).join('').substring(0, 2); 
+                // THUMBNAİL ÜNVANI YENİLƏNDİ: YouTube ID istifadə olunur
+                const thumbnailUrl = `https://img.youtube.com/vi/${video.youtubeId}/hqdefault.jpg`;
+                
+                card.innerHTML = `
+                    <img src="${thumbnailUrl}" alt="${video.title}" class="video-thumbnail">
+                    <div class="video-info">
+                        <div class="channel-avatar">${avatarText}</div>
+                        <div class="text-info">
+                            <h4>${video.title}</h4>
+                            <p>${video.channel}</p>
+                            <p>${video.views} baxış • ${video.uploadDate}</p>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+        
+        function filterVideos() {
+            const searchTerm = document.getElementById('video-search').value.toLowerCase();
+            
+            const filtered = videosData.filter(video => {
+                const matchesFilter = activeFilter === 'all' || video.category === activeFilter;
+                const matchesSearch = video.title.toLowerCase().includes(searchTerm) || video.channel.toLowerCase().includes(searchTerm);
+                return matchesFilter && matchesSearch;
+            });
+            
+            renderVideos(filtered);
+        }
+        
+        function setFilter(filter) {
+            activeFilter = filter;
+            
+            document.querySelectorAll('.filter-buttons button').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.dataset.filter === filter) {
+                    btn.classList.add('active');
+                }
+            });
+            
+            filterVideos();
+        }
+
+        // BÖLÜM 4: CODE-WORDLE OYUN MƏNTİQİ (SÖZ BAZASI VƏ MƏNTİQ YENİLƏNDİ)
+        
+        // YENİLƏNMİŞ SÖZ BAZASI (50+50)
+        const azWords = [
+            "KİTAB", "YAZAR", "DİLƏK", "QARƏT", "AXMAQ", "QƏLƏM", "ƏTRAF", "DALAN", "ÇAVUŞ", "DƏMİR",
+            "SAKİT", "CAVAB", "ƏMƏLİ", "BİLİK", "SAHİL", "KAHİN", "SİTAT", "LİNZA", "GÜNAH", "SAVAB", 
+            "KATİB", "DEYİM", "BAŞLA", "DÖVRƏ", "PROJE", "MODEL", "HAKİM", "SƏFİR", "İNSAN", "LİDER",
+            "ORTAQ", "ASTAR", "KƏLMƏ", "TARİX", "ŞƏKİL", "SƏSLİ", "AYDIN", "YARIŞ", "ƏYLƏN", "QALİB",
+            "İNANC", "SEÇİM", "TƏMİZ", "KƏDƏR", "QAÇIŞ", "MƏKAN", "QANUN", "ÇEVİK", "SÜRƏT", "HƏDƏF"
+        ];
+        
+        const enWords = [
+            "ARRAY", "DEBUG", "LOGIC", "QUERY", "PRINT", "FLOAT", "CLASS", "PIXEL", "STACK", "QUEUE",
+            "CYCLE", "INPUT", "MOUSE", "RESET", "CACHE", "TOKEN", "VALUE", "WHILE", "FORUM", "INDEX",
+            "CHECK", "BUILD", "DREAM", "START", "GREAT", "POWER", "TIGER", "EAGLE", "SMART", "WORLD",
+            "MONEY", "FORCE", "LEARN", "ADAPT", "GRACE", "LIGHT", "BLANK", "EMPTY", "ROUND", "TRUTH",
+            "ABOVE", "BELOW", "CLOSE", "EXACT", "FIELD", "GHOST", "HAPPY", "JOINT", "KNIFE", "LIMIT",
+            "CRANE", "ADIEU", "ABOUT", "IRATE", "RAISE", "STORE", "HOUSE", "MEDIA", "VITAL", "EAGER"
+        ];
+        
+        const wordLength = 5;
+        const maxAttempts = 6;
+        let targetWord = '';
+        let currentAttempt = 0;
+        let currentGuess = ''; 
+        let isGameOver = false;
+
+        const langMessages = {
+            az: {
+                placeholder: "5 hərflik söz daxil edin",
+                win: (word) => `Əla! Sözü tapdınız: ${word.toUpperCase()}`,
+                lose: (word) => `Uduzdunuz. Düzgün söz: ${word.toUpperCase()}`,
+                invalid: (wordLength) => `${wordLength} hərflik söz daxil edin.`,
+                submit: "Yoxla",
+                attempts: "Cəhdlər:",
+                restart: "Yenidən Başla"
+            },
+            en: {
+                placeholder: "Enter a 5-letter word",
+                win: (word) => `Excellent! You found the word: ${word.toUpperCase()}`,
+                lose: (word) => `Game Over. The correct word was: ${word.toUpperCase()}`,
+                invalid: (wordLength) => `Please enter a ${wordLength}-letter word.`,
+                submit: "Submit",
+                attempts: "Attempts:",
+                restart: "Restart"
+            }
+        };
+
+        function getLang() {
+            return document.getElementById('language-select').value;
+        }
+
+        function startGame() {
+            const lang = getLang();
+            const words = lang === 'az' ? azWords : enWords;
+            
+            targetWord = words[Math.floor(Math.random() * words.length)].toUpperCase();
+            
+            currentAttempt = 0;
+            currentGuess = '';
+            isGameOver = false;
+
+            const message = document.getElementById('game-message');
+            const submitBtn = document.getElementById('submit-button');
+
+            guessInput.value = '';
+            guessInput.placeholder = langMessages[lang].placeholder;
+            guessInput.disabled = false;
+            submitBtn.disabled = false;
+            
+            submitBtn.textContent = langMessages[lang].submit;
+            
+            message.textContent = '';
+            message.style.color = 'var(--primary-color)';
+            
+            drawGrid();
+            updateAttemptDisplay();
+            
+            // Oyun yenidən başlayanda fokus inputa verilir
+            setTimeout(() => {
+                guessInput.focus();
+            }, 100);
+        }
+
+        function drawGrid() {
+            const grid = document.getElementById('wordle-grid');
+            grid.innerHTML = '';
+            
+            for (let i = 0; i < maxAttempts; i++) {
+                for (let j = 0; j < wordLength; j++) {
+                    const cell = document.createElement('div');
+                    cell.className = 'wordle-cell';
+                    cell.id = `cell-${i}-${j}`;
+                    grid.appendChild(cell);
+                }
+            }
+        }
+        
+        function updateAttemptDisplay() {
+            const lang = getLang();
+            document.getElementById('current-attempt').textContent = currentAttempt;
+            document.getElementById('attempts-info').innerHTML = `${langMessages[lang].attempts} <span id="current-attempt">${currentAttempt}</span> / ${maxAttempts}`;
+        }
+        
+        function updateGridGuess(guess) {
+            // Cari xanaları yenilə
+            for (let i = 0; i < wordLength; i++) {
+                const cell = document.getElementById(`cell-${currentAttempt}-${i}`);
+                if (cell) {
+                    if (i < guess.length) {
+                        cell.textContent = guess[i];
+                        cell.classList.add('filled');
+                    } else {
+                        cell.textContent = '';
+                        cell.classList.remove('filled');
+                    }
+                }
+            }
+        }
+
+        // 🌟 YENİLƏNMİŞ DÜZƏLİŞ: Balaca hərflərin (i, ı, ə, ş, ö, etc.) düzgün böyük hərflərə çevrilməsi
+        function handleInput(e) {
+            if (isGameOver) {
+                e.target.value = '';
+                return;
+            }
+
+            let value = e.target.value; 
+            let newGuess = '';
+            const lang = getLang(); // Hansı dilin seçildiyini yoxla
+            
+            // Yalnız 5 hərflik sözü saxlamaq
+            if (value.length > wordLength) {
+                value = value.substring(0, wordLength);
+            }
+            
+            // AZƏRBAYCAN VƏ İNGİLİS HƏRFLƏRİNİ NORMALİZASİYA EDƏN MƏNTİQ
+            for (let i = 0; i < value.length; i++) {
+                 let char = value[i];
+                 let upperChar = '';
+
+                 // 1. Azərbaycanca/Latın Balaca Hərflərinin Böyük Hərfə Çevrilməsi
+                 switch(char) {
+                     case 'ə': upperChar = 'Ə'; break;
+                     case 'ç': upperChar = 'Ç'; break;
+                     case 'ğ': upperChar = 'Ğ'; break;
+                     case 'ö': upperChar = 'Ö'; break;
+                     case 'ş': upperChar = 'Ş'; break;
+                     case 'ü': upperChar = 'Ü'; break;
+                     
+                     // İNCƏ DÜZƏLİŞ MƏNTİQİ: I/İ Problemi
+                     case 'i': 
+                         if (lang === 'en') {
+                            upperChar = 'I'; // İngiliscə seçilibsə: balaca 'i' -> böyük 'I' (nöqtəsiz)
+                         } else {
+                            upperChar = 'İ'; // Azərbaycanca seçilibsə: balaca 'i' -> böyük 'İ' (nöqtəli)
+                         }
+                         break;
+                     case 'ı': 
+                         upperChar = 'I'; // Balaca 'ı' (nöqtəsiz) həmişə böyük 'I' (nöqtəsiz) olur.
+                         break;
+                         
+                     // Qalan Latın hərfləri üçün standart böyütmə
+                     case 'a': upperChar = 'A'; break;
+                     case 'b': upperChar = 'B'; break;
+                     case 'c': upperChar = 'C'; break;
+                     case 'd': upperChar = 'D'; break;
+                     case 'e': upperChar = 'E'; break;
+                     case 'f': upperChar = 'F'; break;
+                     case 'g': upperChar = 'G'; break;
+                     case 'h': upperChar = 'H'; break;
+                     case 'j': upperChar = 'J'; break;
+                     case 'k': upperChar = 'K'; break;
+                     case 'l': upperChar = 'L'; break;
+                     case 'm': upperChar = 'M'; break;
+                     case 'n': upperChar = 'N'; break;
+                     case 'o': upperChar = 'O'; break;
+                     case 'p': upperChar = 'P'; break;
+                     case 'q': upperChar = 'Q'; break;
+                     case 'r': upperChar = 'R'; break;
+                     case 's': upperChar = 'S'; break;
+                     case 't': upperChar = 'T'; break;
+                     case 'u': upperChar = 'U'; break;
+                     case 'v': upperChar = 'V'; break;
+                     case 'x': upperChar = 'X'; break;
+                     case 'y': upperChar = 'Y'; break;
+                     case 'z': upperChar = 'Z'; break;
+                     
+                     // 2. Böyük hərflər gəlsə, onları qəbul et (Shift ilə yazanda)
+                     case 'Ə':
+                     case 'Ç':
+                     case 'Ğ':
+                     case 'Ö':
+                     case 'Ş':
+                     case 'Ü':
+                     case 'İ':
+                     case 'I': // Nöqtəsiz 'I' (Az və En)
+                     case 'A':
+                     case 'B':
+                     case 'C':
+                     case 'D':
+                     case 'E':
+                     case 'F':
+                     case 'G':
+                     case 'H':
+                     case 'J':
+                     case 'K':
+                     case 'L':
+                     case 'M':
+                     case 'N':
+                     case 'O':
+                     case 'P':
+                     case 'Q':
+                     case 'R':
+                     case 'S':
+                     case 'T':
+                     case 'U':
+                     case 'V':
+                     case 'X':
+                     case 'Y':
+                     case 'Z':
+                         upperChar = char;
+                         break;
+                         
+                     default:
+                         // İcazə verilməyən simvolları rədd et
+                         continue; 
+                 }
+                 newGuess += upperChar;
+            }
+
+            currentGuess = newGuess;
+            e.target.value = currentGuess; 
+            updateGridGuess(currentGuess);
+        }
+
+        // Desktop klaviatura hadisəsini idarə edir (Məqsəd Enter/Backspace işlətməkdir)
+        function handleKeyPress(e) {
+            if (isGameOver) return;
+            
+            const key = e.key;
+            
+            if (key === 'Enter') {
+                e.preventDefault(); 
+                submitGuess();
+            } else if (key === 'Backspace' || key === 'Delete') {
+                // handleInput artıq input sahəsinin dəyərini avtomatik idarə edir
+            } 
+        }
+
+
+        function submitGuess() {
+            if (isGameOver) {
+                document.getElementById('game-message').textContent = getLang() === 'az' ? "Oyun bitib. Yenidən başla!" : "Game is over. Restart!";
+                return;
+            }
+
+            const guess = currentGuess; 
+            const lang = getLang();
+            const message = document.getElementById('game-message');
+            
+            if (guess.length !== wordLength) {
+                message.style.color = 'var(--error-color)';
+                message.textContent = langMessages[lang].invalid(wordLength);
+                document.getElementById('wordle-grid').classList.add('shake');
+                setTimeout(() => document.getElementById('wordle-grid').classList.remove('shake'), 500);
+                return;
+            }
+
+            message.textContent = ''; 
+            
+            checkGuess(guess);
+            currentGuess = ''; 
+            guessInput.value = ''; // Input sahəsini təmizlə
+            
+            // Təkrar fokuslanma (bəzi mobil brauzerlər üçün)
+            setTimeout(() => {
+                guessInput.focus();
+            }, 50);
+
+            if (guess === targetWord) {
+                isGameOver = true;
+                message.style.color = 'var(--success-color)';
+                message.textContent = langMessages[lang].win(targetWord);
+            } else if (currentAttempt === maxAttempts) {
+                isGameOver = true;
+                message.style.color = 'var(--error-color)';
+                message.textContent = langMessages[lang].lose(targetWord);
+            }
+
+            if (isGameOver) {
+                guessInput.disabled = true;
+                document.getElementById('submit-button').disabled = true;
+            }
+        }
+
+        // RƏNGLƏNMƏ MƏNTİQİ
+        function checkGuess(guess) {
+            let target = targetWord.split('');
+            let guessArr = guess.split('');
+            let result = Array(wordLength).fill('absent');
+            
+            // 1. Düzgün yeri tapan (Yaşıl - CORRECT)
+            let targetCheck = target.map((char, index) => {
+                if (guessArr[index] === char) {
+                    result[index] = 'correct';
+                    return null; // Artıq istifadə edildi
+                }
+                return char;
+            });
+
+            // 2. Yanlış yerdə olan, amma sözdə olanı tapan (Sarı - PRESENT)
+            for (let i = 0; i < wordLength; i++) {
+                if (result[i] === 'absent') { 
+                    const targetIndex = targetCheck.findIndex(char => char === guessArr[i]);
+                    
+                    if (targetIndex !== -1) {
+                        result[i] = 'present';
+                        targetCheck[targetIndex] = null; 
+                    }
+                }
+            }
+            
+            // 3. Grid-i yenilə və rənglə
+            for (let i = 0; i < wordLength; i++) {
+                const cell = document.getElementById(`cell-${currentAttempt}-${i}`);
+                cell.textContent = guess[i];
+                cell.classList.remove('filled'); 
+
+                setTimeout(() => {
+                    cell.classList.add(result[i]);
+                }, 100 * i);
+            }
+            
+            currentAttempt++;
+            updateAttemptDisplay();
+        }
+
+        // BÖLÜM 5: ANİMASİYA VƏ NAVİQASİYA MƏNTİQİ
+        function animateBookCards() {
+             const bookCards = document.querySelectorAll('.book-card');
+             bookCards.forEach((card, index) => {
+                 const observer = new IntersectionObserver((entries) => {
+                     entries.forEach(entry => {
+                         if (entry.isIntersecting) {
+                             setTimeout(() => {
+                                 card.style.opacity = 1;
+                                 card.style.transform = 'rotateY(0deg) translateZ(0px)';
+                             }, 200 * (index + 1)); 
+                             observer.unobserve(card); 
+                         }
+                     });
+                 }, { threshold: 0.3 }); 
+                 observer.observe(card);
+             });
+        }
+        
+        function setActiveNavOnScroll() {
+            const sections = document.querySelectorAll('.section');
+            const navLinks = document.querySelectorAll('.nav-link');
+            const headerHeight = document.querySelector('.header').offsetHeight;
+            
+            let current = 'home';
+            
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop - headerHeight - 10; 
+                if (pageYOffset >= sectionTop) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('data-section') === current) {
+                    link.classList.add('active');
+                }
+            });
+        }
+
+
+        // BÖLÜM 6: İNİSİALİZASİYA (DOM Yükləndikdə)
+        document.addEventListener('DOMContentLoaded', function() {
+            
+            // Səhifə elementlərinin yavaşca görsənməsi (bu funksiya CSS-dəki animation: fadeIn ilə işləyir)
+            const sections = document.querySelectorAll('.section');
+            sections.forEach(section => {
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            section.style.opacity = 1;
+                            section.style.animationPlayState = 'running';
+                            observer.unobserve(section);
+                        }
+                    });
+                }, { threshold: 0.1 });
+                observer.observe(section);
+            });
+            
+            animateBookCards(); 
+
+            window.addEventListener('scroll', setActiveNavOnScroll); 
+            setActiveNavOnScroll(); 
+            
+            const modalTriggers = document.querySelectorAll('.service-card[data-quiz-trigger], .book-card[data-genre], .service-card[data-game-trigger]');
+            const modals = document.querySelectorAll('.modal');
+            const closeBtns = document.querySelectorAll('.close-btn');
+            const nav = document.querySelector('.nav');
+            const menuToggle = document.querySelector('.menu-toggle');
+            const navLinks = document.querySelectorAll('.nav-link');
+            const toggleIcon = menuToggle ? menuToggle.querySelector('i') : null;
+
+            // VİDEO PLATFORMASI BAŞLANGIC YÜKLƏNMƏSİ VƏ FİLTERLƏR
+            renderVideos(videosData); 
+            
+            document.getElementById('video-search').addEventListener('keyup', filterVideos);
+            
+            document.querySelectorAll('.filter-buttons button').forEach(button => {
+                button.addEventListener('click', function() {
+                    setFilter(this.dataset.filter);
+                });
+            });
+
+
+            // 1. Kart/Trigger Klikləmə Hadisələri
+            modalTriggers.forEach(trigger => {
+                trigger.addEventListener('click', function(e) {
+                    e.preventDefault(); 
+                    if (this.dataset.genre) {
+                        openBookModal(this.dataset.genre);
+                    } else if (this.dataset.quizTrigger) {
+                        openQuizModal(); 
+                    } else if (this.dataset.gameTrigger === 'codeWordle') {
+                        openModal('codeWordle'); 
+                    }
+                });
+            });
+
+            // 2. Header Naviqasiya Məntiqi (Mobil Dəstəkli)
+            if (menuToggle) {
+                menuToggle.addEventListener('click', function() {
+                    nav.classList.toggle('open');
+                    if (toggleIcon) {
+                        toggleIcon.className = nav.classList.contains('open') ? 'fas fa-times' : 'fas fa-bars';
+                    }
+                });
+            }
+            
+            navLinks.forEach(link => {
+                link.addEventListener('click', function() {
+                    if (window.innerWidth <= 992 && nav.classList.contains('open')) {
+                         nav.classList.remove('open');
+                         if(toggleIcon) toggleIcon.className = 'fas fa-bars';
+                    }
+                });
+            });
+
+            // 3. Modal Bağlama Məntiqi
+            closeBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    closeModal(this.dataset.modal);
+                });
+            });
+
+            window.onclick = function(event) {
+                modals.forEach(modal => {
+                    if (event.target == modal) {
+                        closeModal(modal.id.replace('Modal', ''));
+                    }
+                });
+            }
+
+            // 4. Əlaqə Formu Simulyasiyası
+            document.getElementById('contact-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const status = document.getElementById('form-status');
+                status.style.color = 'var(--secondary-color)';
+                status.textContent = 'Mesajınız göndərilir... Zəhmət olmasa gözləyin.';
+                
+                setTimeout(() => {
+                    status.style.color = 'var(--success-color)';
+                    status.textContent = '✅ Mesajınız uğurla göndərildi! Tezliklə sizinlə əlaqə saxlanılacaq.';
+                    document.getElementById('contact-form').reset();
+                }, 2500);
+            });
+            
+            // OYUNU BAŞLAT
+            drawGrid();
+            
+        });
+        
+    </script>
+</body>
+</html>
